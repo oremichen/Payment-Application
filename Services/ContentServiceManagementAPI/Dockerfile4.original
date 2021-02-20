@@ -1,0 +1,8 @@
+FROM mcr.microsoft.com/dotnet/core/sdk:2.2-stretch AS build
+WORKDIR /app
+EXPOSE 80
+
+COPY ./publish /publish
+ENV TZ=Africa/Lagos
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+ENTRYPOINT ["dotnet", "ContentServiceManagementAPI.dll"]

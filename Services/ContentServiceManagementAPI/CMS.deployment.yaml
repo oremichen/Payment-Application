@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coure-cms-deployment
+  labels:
+    app: coure-cms
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: coure-cms
+  template:
+    metadata:
+      labels:
+        app: coure-cms
+    spec:
+      containers:
+        - image: reg.coure-tech.com:5000/content-service-management:__staging-image-tag__
+          imagePullPolicy: Always
+          name: coure-cms
+          ports:
+          - name: coure-cms
+            containerPort: 80
+            protocol: TCP
+      imagePullSecrets:
+        - name: docker-creds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: coure-cms-service
+spec:
+  type: ClusterIP
+  selector:
+    app: coure-cms
+  ports:
+  - port: 4009
+    targetPort: 80
+    name: http
+    protocol: TCP
